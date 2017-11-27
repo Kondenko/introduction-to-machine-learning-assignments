@@ -4,7 +4,7 @@ from utils import *
 
 ex = Executor("PA1-DataPreparationPandas")
 
-data = p.read_csv(filepath_or_buffer='F:\\Python projects\\projects\\IntroToMachineLearning\\titanic.csv', index_col='PassengerId', engine='python')
+data = get_titanic_dataset(p)
 
 header = "Males and females"
 

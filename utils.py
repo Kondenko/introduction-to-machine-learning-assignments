@@ -1,3 +1,11 @@
+def get_titanic_dataset(pandas):
+    return pandas.read_csv(
+        filepath_or_buffer='F:\\Python projects\\projects\\IntroToMachineLearning\\datasets\\titanic\\titanic.csv',
+        index_col='PassengerId',
+        engine='python'
+    )
+
+
 def percent(part, total):
     return part * 100.0 / total
 
@@ -19,7 +27,8 @@ class Executor:
     def write_to_file(self, name, text):
         try:
             path = """F:\\Python projects\\projects\\IntroToMachineLearning\\{}\\answers\\{}.txt""" \
-                .format(str(name), self.assignment)
+                .format(self.assignment, str(name))
+            # print "Writing to {}".format(path)
             f = open(path, "w")
             try:
                 f.write(str(text))
@@ -27,6 +36,11 @@ class Executor:
                 f.close()
         except IOError:
             pass
+
+    def print_answer(self, title, answer):
+        self.print_title(title)
+        print answer
+        self.write_to_file(title, answer)
 
     def execute(self, title, algorithm):
         self.print_title(title)
