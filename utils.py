@@ -1,6 +1,18 @@
+import os
+
+
+def get_project_root():
+    path = os.path.abspath(__file__)
+    return os.path.dirname(path)
+
+
+def get_datasets_folder():
+    return get_project_root() + "\\datasets\\"
+
+
 def get_titanic_dataset(pandas):
     return pandas.read_csv(
-        filepath_or_buffer='F:\\Python projects\\projects\\IntroToMachineLearning\\datasets\\titanic\\titanic.csv',
+        filepath_or_buffer=(get_datasets_folder() + "titanic\\titanic.csv"),
         index_col='PassengerId',
         engine='python'
     )
@@ -26,8 +38,8 @@ class Executor:
 
     def write_to_file(self, name, text):
         try:
-            path = """F:\\Python projects\\projects\\IntroToMachineLearning\\{}\\answers\\{}.txt""" \
-                .format(self.assignment, str(name))
+            path = """{}\\{}\\answers\\{}.txt""" \
+                .format(get_project_root(), self.assignment, str(name))
             # print "Writing to {}".format(path)
             f = open(path, "w")
             try:
