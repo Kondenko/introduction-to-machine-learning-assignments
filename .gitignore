@@ -1,5 +1,6 @@
 **/*_formatted.csv
 **/answers/*
+venv
 
 .idea
 *.pyc
