@@ -27,6 +27,7 @@ def round2(number):
 
 
 class Executor:
+
     assignment = ''
 
     def __init__(self, assignment_name):
