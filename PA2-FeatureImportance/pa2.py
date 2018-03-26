@@ -2,7 +2,7 @@ import pandas as p
 from sklearn.tree import DecisionTreeClassifier
 from utils import *
 
-e = Executor("PA2-FeatureImportance")
+e = Executor()
 
 clf = DecisionTreeClassifier(random_state=241)
 

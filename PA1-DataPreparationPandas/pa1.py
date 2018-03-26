@@ -2,7 +2,7 @@ import pandas as p
 import numpy as np
 from utils import *
 
-ex = Executor("PA1-DataPreparationPandas")
+ex = Executor()
 
 data = get_titanic_dataset(p)
 

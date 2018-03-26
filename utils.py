@@ -28,21 +28,25 @@ def round2(number):
 
 class Executor:
 
-    assignment = ''
-
-    def __init__(self, assignment_name):
-        self.assignment = assignment_name
+    def __init__(self):
+        Executor()
 
     @staticmethod
     def print_title(title):
         print "\n||| " + title + " |||\n"
 
-    def write_to_file(self, name, text):
+    @staticmethod
+    def write_to_file(name, text):
+        import errno
         try:
-            path = """{}\\{}\\answers\\{}.txt""" \
-                .format(get_project_root(), self.assignment, str(name))
-            # print "Writing to {}".format(path)
-            f = open(path, "w")
+            answers_dir = "answers"
+            try:
+                os.makedirs(answers_dir)
+            except OSError as e:
+                if e.errno != errno.EEXIST:
+                    raise
+            answer_file = "{}\\{}.txt".format(answers_dir, str(name))
+            f = open(answer_file, "w")
             try:
                 f.write(str(text))
             finally:

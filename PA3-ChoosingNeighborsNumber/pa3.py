@@ -7,7 +7,7 @@ from utils import *
 
 # Utils
 
-e = Executor("PA3-ChoosingNeighborsNumber")
+e = Executor()
 
 # Data
 
