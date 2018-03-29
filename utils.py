@@ -7,7 +7,11 @@ def get_project_root():
 
 
 def get_datasets_folder():
-    return get_project_root() + "\\datasets\\"
+    return os.path.join(get_project_root(), "datasets")
+
+
+def get_csv_path(name):
+    return "{}/{}.csv".format(get_datasets_folder(), name)
 
 
 def get_titanic_dataset(pandas):
@@ -29,7 +33,7 @@ def round2(number):
 class Executor:
 
     def __init__(self):
-        Executor()
+        pass
 
     @staticmethod
     def print_title(title):
@@ -46,18 +50,16 @@ class Executor:
                 if e.errno != errno.EEXIST:
                     raise
             answer_file = "{}\\{}.txt".format(answers_dir, str(name))
-            f = open(answer_file, "w")
-            try:
+            with open(answer_file, "w") as f:
                 f.write(str(text))
-            finally:
-                f.close()
         except IOError:
             pass
 
-    def print_answer(self, title, answer):
+    def print_answer(self, title, answer, write_to_file = True):
         self.print_title(title)
         print answer
-        self.write_to_file(title, answer)
+        if write_to_file:
+            self.write_to_file(title, answer)
 
     def execute(self, title, algorithm):
         self.print_title(title)
