@@ -37,7 +37,7 @@ class Executor:
 
     @staticmethod
     def print_title(title):
-        print "\n||| " + title + " |||\n"
+        print("\n||| " + title + " |||\n")
 
     @staticmethod
     def write_to_file(name, text):
@@ -50,6 +50,7 @@ class Executor:
                 if e.errno != errno.EEXIST:
                     raise
             answer_file = "{}/{}.txt".format(answers_dir, str(name))
+            print(f"Writing to {answer_file}:\n{text}")
             with open(answer_file, "w") as f:
                 f.write(str(text))
         except IOError:
@@ -57,7 +58,7 @@ class Executor:
 
     def print_answer(self, title, answer, write_to_file = True):
         self.print_title(title)
-        print answer
+        print(answer)
         if write_to_file:
             self.write_to_file(title, answer)
 

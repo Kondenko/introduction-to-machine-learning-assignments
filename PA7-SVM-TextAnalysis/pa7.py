@@ -29,7 +29,7 @@ def get_top_10_words(feature_names, coefs):
     coefs_abs = list()
     for i in range(coefs.nnz):
         coefs_abs.append((coefs.indices[i], abs(coefs.data[i])))
-    coefs_abs.sort(key=lambda (k, v): (v, k), reverse=True)
+    coefs_abs.sort(key=lambda k_v: (k_v[1], k_v[0]), reverse=True)
     return ','.join(sorted(map(lambda item: str(feature_names[item[0]]), coefs_abs[:10])))
 
 
