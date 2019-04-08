@@ -1,3 +1,5 @@
+import math
+
 import pandas as p
 import numpy as np
 import utils as ut
@@ -17,17 +19,29 @@ class LogisticRegression:
         self.w2 = 0
 
     def predict(self, x):
-        return np.array([1 / (1 + np.exp(-(x.T[0] * self.w1 + x.T[1] * self.w2)))]).T
+        return np.array([1 / (1 + np.exp(-(x[:, 0] * self.w1 + x[:, 1] * self.w2)))]).T
 
     def gradient_descent(self, x, y, steps=10_000, k=0.1, c=10, regularize=False):
         e = 1e-5
-        for _ in range(1, steps):
-            delta_w1 = self.w1 + k * 1 / len(y) * np.sum(y[0] * x.T[0].T * (1 - self.predict(x)).T) - (k * c * self.w1 if regularize else 0)
-            delta_w2 = self.w2 + k * 1 / len(y) * np.sum(y[0] * x.T[1].T * (1 - self.predict(x)).T) - (k * c * self.w2 if regularize else 0)
-            if abs(self.w1 - delta_w1) < e and abs(self.w2 - delta_w2) < e:
+
+        for i in range(1, steps):
+            x1 = x[:, 0]
+            x2 = x[:, 1]
+
+            def sigmoid_exp():
+                return 1 - 1 / (1 + np.exp(-y * np.array([(self.w1 * x1 + self.w2 * x2)]).T))
+
+            new_w1 = self.w1 + k * 1 / len(y) * np.sum((y.T * x1).T * sigmoid_exp()) - ((k * c * self.w1) if regularize else 0)
+            new_w2 = self.w2 + k * 1 / len(y) * np.sum((y.T * x2).T * sigmoid_exp()) - ((k * c * self.w2) if regularize else 0)
+
+            if self.distance([self.w1, self.w2], [new_w1, new_w2]) < e:
                 break
-            self.w1 += delta_w1
-            self.w1 += delta_w2
+
+            self.w1 = new_w1
+            self.w2 = new_w2
+
+    def distance(self, w, w_new):
+        return np.linalg.norm(np.array([w]) - np.array([w_new]))
 
 
 e.print_title("AUC-ROC w/ and w/o regularization")
@@ -41,7 +55,9 @@ lr_reg.gradient_descent(X, Y, regularize=True)
 y_actual = lr.predict(X)
 y_actual_reg = lr_reg.predict(X)
 
-score = roc_auc_score(Y, y_actual)
-score_reg = roc_auc_score(Y, y_actual_reg)
+score = round(roc_auc_score(Y, y_actual), 3)
+score_reg = round(roc_auc_score(Y, y_actual_reg), 3)
+
+assert score == 0.927 and score_reg == 0.936
 
 e.write_to_file("lr_auc_roc", f"{score} {score_reg}")
