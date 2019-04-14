@@ -31,16 +31,16 @@ class LogisticRegression:
             def sigmoid_exp():
                 return 1 - 1 / (1 + np.exp(-y * np.array([(self.w1 * x1 + self.w2 * x2)]).T))
 
-            new_w1 = self.w1 + k * 1 / len(y) * np.sum((y.T * x1).T * sigmoid_exp()) - ((k * c * self.w1) if regularize else 0)
-            new_w2 = self.w2 + k * 1 / len(y) * np.sum((y.T * x2).T * sigmoid_exp()) - ((k * c * self.w2) if regularize else 0)
+            new_w1 = self.w1 + k * np.mean((y.T * x1).T * sigmoid_exp()) - (k * c * self.w1 if regularize else 0)
+            new_w2 = self.w2 + k * np.mean((y.T * x2).T * sigmoid_exp()) - (k * c * self.w2 if regularize else 0)
 
-            if self.distance([self.w1, self.w2], [new_w1, new_w2]) < e:
+            if self.__distance__([self.w1, self.w2], [new_w1, new_w2]) < e:
                 break
 
             self.w1 = new_w1
             self.w2 = new_w2
 
-    def distance(self, w, w_new):
+    def __distance__(self, w, w_new):
         return np.linalg.norm(np.array([w]) - np.array([w_new]))
 
 
