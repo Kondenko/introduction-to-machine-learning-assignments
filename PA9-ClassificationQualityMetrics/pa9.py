@@ -1,7 +1,6 @@
 from sklearn.metrics import *
 
 import pandas as p
-import numpy as np
 import utils as u
 
 e = u.Executor()
@@ -30,16 +29,16 @@ def calculate_errors() -> list:
     fn = 0
     tn = 0
     for true, pred in clf.values:
-        if true == 1:
-            if pred == 1:
+        if true:
+            if pred:
                 tp += 1
             else:
-                fp += 1
-        else:
-            if pred == 0:
-                tn += 1
-            else:
                 fn += 1
+        else:
+            if pred:
+                fp += 1
+            else:
+                tn += 1
     return [tp, fp, fn, tn]
 
 
@@ -61,9 +60,9 @@ answer = u.join([accuracy, precision, recall, f1], mapper=lambda s: str(u.round2
 
 e.print_answer(title, answer)
 
-### Best AUC-ROC
+###
 
-title = "The best classificator"
+title = "Best AUC-ROC"
 
 scores['score_logreg'] = scores['score_logreg'].apply(lambda i: i >= 0.5)
 scores['score_svm'] = scores['score_svm'].apply(lambda i: i >= 0)
@@ -75,18 +74,20 @@ best_classificator: tuple = max(results)
 
 e.print_answer(title, best_classificator[0])
 
-## Max precision with the given recall
+###
 
-title = "Max precision with the given recall"
+title = "Best precision with the given recall"
 
 recall_threshold = 0.7
 
 recall_curve_values = list(map(lambda pred: precision_recall_curve(score_true, pred), preds))
 
+
 def get_accuracy(pres_rec_thres: tuple):
     df: p.DataFrame = p.DataFrame(pres_rec_thres, ["precision", "recall", "threshold"]).T
     filtered: p.DataFrame = df.loc[df["recall"] >= recall_threshold]
     return filtered.loc[filtered["precision"].idxmax].precision
+
 
 accuracies = [get_accuracy(c) for (c) in recall_curve_values]
 
