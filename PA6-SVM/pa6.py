@@ -4,7 +4,7 @@ import pandas as pd
 
 e = Executor()
 
-dataset = pd.read_csv(get_csv_path("svm-data"), header=None)
+dataset = pd.read_csv(get_csv_dataset("svm-data"), header=None)
 x = dataset.iloc[:, 1:]
 y = dataset.iloc[:, 0]
 

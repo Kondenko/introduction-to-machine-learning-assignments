@@ -10,7 +10,7 @@ def get_datasets_folder():
     return os.path.join(get_project_root(), "datasets")
 
 
-def get_csv_path(name):
+def get_csv_dataset(name):
     return "{}/{}.csv".format(get_datasets_folder(), name)
 
 
@@ -30,6 +30,12 @@ def round2(number):
     return round(number, 2)
 
 
+def join(iterable, delimiter=" ", mapper=None) -> str:
+    if mapper is not None:
+        return delimiter.join(map(lambda i: str(mapper(i)), iterable))
+    else:
+        return delimiter.join(map(str, iterable))
+
 class Executor:
 
     def __init__(self):
@@ -42,6 +48,7 @@ class Executor:
     @staticmethod
     def write_to_file(name, text):
         import errno
+
         try:
             answers_dir = "./answers"
             try:
@@ -56,11 +63,10 @@ class Executor:
         except IOError:
             pass
 
-    def print_answer(self, title, answer, write_to_file = True):
+    def execute(self, title, algorithm, write_to_file=True):
+        self.print_answer(title, algorithm(), write_to_file)
+
+    def print_answer(self, title, answer, write_to_file=True):
         self.print_title(title)
-        print(answer)
         if write_to_file:
             self.write_to_file(title, answer)
-
-    def execute(self, title, algorithm, write_to_file = True):
-        self.print_answer(title, algorithm(), write_to_file)

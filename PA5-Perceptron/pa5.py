@@ -9,12 +9,12 @@ from sklearn.metrics import accuracy_score
 e = Executor()
 
 # Training dataset
-dataset_train = pd.read_csv(get_csv_path("perceptron-train"), header=None)
+dataset_train = pd.read_csv(get_csv_dataset("perceptron-train"), header=None)
 x_train = dataset_train.iloc[:, 1:]
 y_train = dataset_train.iloc[:, 0]
 
 # Test dataset
-dataset_test = pd.read_csv(get_csv_path("perceptron-test"))
+dataset_test = pd.read_csv(get_csv_dataset("perceptron-test"))
 x_test = dataset_test.iloc[:, 1:]
 y_test = dataset_test.iloc[:, 0]
 

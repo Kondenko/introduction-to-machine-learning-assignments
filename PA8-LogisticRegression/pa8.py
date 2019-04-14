@@ -7,7 +7,7 @@ from sklearn.metrics import roc_auc_score
 
 e = ut.Executor()
 
-dataset = p.read_csv(ut.get_csv_path("data-logistic"))
+dataset = p.read_csv(ut.get_csv_dataset("data-logistic"))
 X = dataset.values[:, 1:]
 Y = dataset.values[:, :1]
 
