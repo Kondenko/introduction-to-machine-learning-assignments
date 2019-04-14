@@ -64,15 +64,10 @@ e.print_answer(title, answer)
 
 title = "Best AUC-ROC"
 
-scores['score_logreg'] = scores['score_logreg'].apply(lambda i: i >= 0.5)
-scores['score_svm'] = scores['score_svm'].apply(lambda i: i >= 0)
-scores['score_knn'] = scores['score_knn'].apply(lambda i: bool(round(i)))
-scores['score_tree'] = scores['score_tree'].apply(lambda i: i >= 0.5)
+results = dict(zip(classifier_names, list(map(lambda pred: roc_auc_score(score_true, pred), preds))))
+best_classifier = max(results, key=lambda c_s: c_s[1])
 
-results: tuple = tuple(zip(classifier_names, list(map(lambda pred: roc_auc_score(score_true, pred), preds))))
-best_classificator: tuple = max(results)
-
-e.print_answer(title, best_classificator[0])
+e.print_answer(title, best_classifier)
 
 ###
 
@@ -93,6 +88,6 @@ accuracies = [get_accuracy(c) for (c) in recall_curve_values]
 
 clf_accuracies = dict(zip(classifier_names, accuracies))
 
-answer = max(clf_accuracies, key=lambda c_a: c_a[1])
+answer = max(clf_accuracies)
 
 e.print_answer(title, answer)
