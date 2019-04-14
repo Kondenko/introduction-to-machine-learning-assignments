@@ -6,10 +6,11 @@ import utils as u
 e = u.Executor()
 
 clf = p.read_csv(u.get_csv_dataset("classification"))
-true = clf.T.values[0]
-pred = clf.T.values[1]
+clf_true = clf.T.values[0]
+clf_pred = clf.T.values[1]
 
 scores = p.read_csv(u.get_csv_dataset("scores"))
+score_true = scores.values[:, 0]
 
 ###
 
@@ -47,11 +48,25 @@ e.print_answer(title, answer)
 
 title = "Primary metrics"
 
-accuracy = accuracy_score(true, pred)
-precision = precision_score(true, pred)
-recall = recall_score(true, pred)
-f1 = f1_score(true, pred)
+accuracy = accuracy_score(clf_true, clf_pred)
+precision = precision_score(clf_true, clf_pred)
+recall = recall_score(clf_true, clf_pred)
+f1 = f1_score(clf_true, clf_pred)
 
 answer = u.join([accuracy, precision, recall, f1], mapper=lambda s: str(u.round2(s)))
 
 e.print_answer(title, answer)
+
+### Best AUC-ROC
+
+title = "The best classificator"
+
+scores['score_logreg'] = scores['score_logreg'].apply(lambda i: i >= 0.5)
+scores['score_svm'] = scores['score_svm'].apply(lambda i: i >= 0)
+scores['score_knn'] = scores['score_knn'].apply(lambda i: bool(round(i)))
+scores['score_tree'] = scores['score_tree'].apply(lambda i: i >= 0.5)
+
+results = tuple(zip(scores.columns.values.tolist()[1:], list(map(lambda pred: roc_auc_score(score_true, pred), scores.values.T[1:, :]))))
+best_classificator = str(max(results))
+
+e.print_answer(title, best_classificator)
