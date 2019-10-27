@@ -36,6 +36,7 @@ def join(iterable, delimiter=" ", mapper=None) -> str:
     else:
         return delimiter.join(map(str, iterable))
 
+
 class Executor:
 
     def __init__(self):
