@@ -14,14 +14,14 @@ X = close_prices.iloc[:, 1:]
 pca = PCA(n_components=10)
 components = pca.fit_transform(X)
 
+
 def find_min_components_number(dispersion_threshold=0.9):
     sum = 0
-    for i in (0, len(pca.explained_variance_ratio_) - 1):
+    for i in range(len(pca.explained_variance_ratio_) - 1):
         sum += pca.explained_variance_ratio_[i]
         if sum >= dispersion_threshold:
             return i + 1
-    return pca.n_components
-
+    return -1
 
 e.execute("How many components are needed to explain 90% of dispersion", find_min_components_number)
 
