@@ -14,7 +14,6 @@ X = close_prices.iloc[:, 1:].T
 pca = PCA(n_components=10)
 components = pca.fit_transform(X)
 
-
 def find_min_components_number(dispersion_threshold=0.9):
     sum = 0
     for i in (0, len(pca.explained_variance_ratio_) - 1):
@@ -34,7 +33,7 @@ correlation = corrcoef(corr_x.T, corr_y.T)[0][1]
 
 e.print_answer("Pearson correlation between the first component and DJIA", round2(correlation))
 
-index = components.T[0].argmax()
-company_with_max_weight_name = close_prices.columns.values[index]
+index = pca.components_[0].argmax()
+company_with_max_weight_name = X[index].argmax()
 
 e.print_answer("Company with max weight", company_with_max_weight_name)
