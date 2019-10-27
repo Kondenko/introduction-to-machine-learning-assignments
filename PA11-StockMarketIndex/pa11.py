@@ -9,7 +9,7 @@ e = Executor()
 
 close_prices: DataFrame = p.read_csv(get_csv_dataset("close_prices"))
 names = close_prices.columns.values[1:]
-X = close_prices.iloc[:, 1:].T
+X = close_prices.iloc[:, 1:]
 
 pca = PCA(n_components=10)
 components = pca.fit_transform(X)
@@ -28,12 +28,12 @@ e.execute("How many components are needed to explain 90% of dispersion", find_mi
 djia_index: DataFrame = p.read_csv(get_csv_dataset("djia_index"))
 
 corr_x = djia_index.iloc[:, 1:]
-corr_y = pca.components_[0].reshape((len(corr_x), 1))
-correlation = corrcoef(corr_x.T, corr_y.T)[0][1]
+corr_y = components[:, 0].reshape((len(corr_x), 1))
+correlation = corrcoef(corr_x.T, corr_y.T)[0, 1]
 
 e.print_answer("Pearson correlation between the first component and DJIA", round2(correlation))
 
 index = pca.components_[0].argmax()
-company_with_max_weight_name = X[index].argmax()
+company_with_max_weight_name = X.T[index].argmax()
 
 e.print_answer("Company with max weight", company_with_max_weight_name)
