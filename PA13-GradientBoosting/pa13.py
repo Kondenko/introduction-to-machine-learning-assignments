@@ -1,6 +1,5 @@
 from math import e
 
-import os
 from utils import *
 from numpy.core.multiarray import ndarray
 from pandas import DataFrame
@@ -39,9 +38,10 @@ def train_gb_classifier(learning_rate: float):
     loss_train: ndarray = np.array(list(map(lambda y_pred: log_loss(y_train, y_pred), y_pred_train_sigmoid)))
     loss_test: ndarray = np.array(list(map(lambda y_pred: log_loss(y_test, y_pred), y_pred_test_sigmoid)))
     plot(learning_rate, loss_test, loss_train)
-    iteration = loss_test.argmin()
+    iteration = loss_test.argmin() + 1
     loss = loss_test[iteration]
     return loss, iteration
+
 
 def train_forest_classifier(trees_number: int):
     clf: RandomForestClassifier = RandomForestClassifier(n_estimators=trees_number, random_state=241)
@@ -62,11 +62,10 @@ def plot(learning_rate, loss_test, loss_train):
 
 
 def sigmoid(y_pred):
-    return 1 / (1 + e ** -y_pred)
+    return 1. / (1. + np.exp(-y_pred))
 
 
 rates = [1, 0.5, 0.3, 0.2, 0.1]
-
 results = dict(zip(rates, list(map(train_gb_classifier, rates))))
 
 ### 3 ###
@@ -76,16 +75,11 @@ executor.print_answer("Overfitting or underfitting", "overfitting")
 ### 4 ###
 
 loss, iteration = results[0.2]
-print(f"learning rate = {0.2}, smallest loss is {loss} on iteration {iteration}")
-answer = f"{round2(loss)}, {iteration}"
+answer = f"{round2(loss)} {iteration}"
 executor.print_answer("Smallest log_loss and it iteration number on the test dataset", answer)
 
 ### 5 ###
 
 best_loss, best_iter = min(results.values())
-
-print(f"best_loss = {best_loss}, best_iter = {best_iter}")
-
 random_forest_loss = train_forest_classifier(trees_number=best_iter)
-
 executor.print_answer("Random forest loss", round2(random_forest_loss))

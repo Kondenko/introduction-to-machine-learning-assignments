@@ -58,7 +58,8 @@ class Executor:
                 if e.errno != errno.EEXIST:
                     raise
             answer_file = "{}/{}.txt".format(answers_dir, str(name))
-            print(f"Writing to {answer_file}:\n{text}")
+            # print(f"Writing to {answer_file}:\n{text}")
+            print(text)
             with open(answer_file, "w", encoding="utf-8") as f:
                 f.write(str(text))
         except IOError:
