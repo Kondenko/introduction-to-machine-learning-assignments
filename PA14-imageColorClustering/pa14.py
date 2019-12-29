@@ -3,6 +3,7 @@ from collections import defaultdict
 import skimage
 from matplotlib import pylab
 from skimage.io import imread
+from skimage.metrics import peak_signal_noise_ratio
 from sklearn.cluster import KMeans
 import numpy as np
 from numpy import ndarray
@@ -14,14 +15,13 @@ imgarr: np.ndarray = skimage.img_as_float(image)
 
 X: ndarray = imgarr.reshape((-1, imgarr.shape[2]))
 
-
 def clusterize(n_clusters=8, show_images=False) -> float:
     clf = KMeans(init="k-means++", random_state=241, n_clusters=n_clusters)
     clf.fit(X)
     # Mean
     X_mean = list(map(lambda p: clf.cluster_centers_[p], clf.labels_))
     mse_mean = mse(np.array(X_mean))
-    psnr_mean = psnr(mse_mean)
+    psnr_mean = peak_signal_noise_ratio(X, np.array(X_mean))
     if show_images:
         image_mean = np.reshape(X_mean, image.shape)
         fig_mean = pylab.figure()
@@ -37,7 +37,7 @@ def clusterize(n_clusters=8, show_images=False) -> float:
         cluster_medians[c] = np.median(clusterized_data[c], 0)
     X_median = list(map(lambda p: cluster_medians[p], clf.labels_))
     mse_median = mse(np.array(X_median))
-    psnr_median = psnr(mse_median)
+    psnr_median = peak_signal_noise_ratio(X, np.array(X_median))
     if show_images:
         image_median = np.reshape(X_median, image.shape)
         fig_median = pylab.figure()
@@ -46,7 +46,7 @@ def clusterize(n_clusters=8, show_images=False) -> float:
     print(f"{n_clusters} clusters")
     print(f"PSNR for mean color = {psnr_mean}")
     print(f"PSNR for median color = {psnr_median}")
-    return min(psnr_mean, psnr_median)
+    return max(psnr_mean, psnr_median)
 
 
 def psnr(mse, max=1):
@@ -65,6 +65,7 @@ def find_min_num_of_clusters_for_psnr(max_clusters: int = 20, target: int = 20):
     for clusters in range(1, max_clusters):
         psnr = clusterize(clusters)
         if psnr > target:
+            print()
             print(f"Reached target PSNR {psnr} with {clusters} clusters")
             return clusters
     print("The algorithm did not converge")
