@@ -38,7 +38,17 @@ def clusterize() -> float:
     fig_median = pylab.figure()
     fig_median.canvas.set_window_title("Median")
     pylab.imshow(image_median)
+    # MSE for Mean
+    mse_mean = mse(X, np.array(X_mean), image.shape)
     return 0
+
+
+def mse(X, X_hat, shape: tuple):
+    return np.sum(sqr_abs(X, X_hat, 0) + sqr_abs(X, X_hat, 1) + sqr_abs(X, X_hat, 2)) / (3 * shape[0] * shape[1])
+
+
+def sqr_abs(X, X_hat, channel):
+    return np.power(np.abs(X[:, channel] - X_hat[:, channel]), 2)
 
 
 clusterize()
