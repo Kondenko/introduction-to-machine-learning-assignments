@@ -4,3 +4,6 @@ venv
 
 .idea
 *.pyc
+
+**/.ipynb_checkpoints/**
+FinalStatement/data
